@@ -1,0 +1,18 @@
+-r base.txt
+
+# Python
+
+# Django
+
+# Rest Framework
+
+# Postgres
+
+# deployment
+
+
+gunicorn==23.0.0  # https://github.com/benoitc/gunicorn
+# psycopg[c]==3.2.6  # https://github.com/psycopg/psycopg
+sentry-sdk==2.26.1  # https://github.com/getsentry/sentry-python
+daphne==4.1.2 # https://pypi.org/project/daphne/
+

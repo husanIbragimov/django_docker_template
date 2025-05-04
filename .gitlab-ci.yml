@@ -1,0 +1,58 @@
+stages:
+ - build
+ - test
+ - release
+ - deploy
+
+build-job:
+ tags:
+   - gitlab-org-docker
+ stage: build
+ script:
+   - echo "Creating virtual environment for the project..."
+   - python -m venv venv
+   - source venv/bin/activate
+   - echo "Installing requirements..."
+   - pip install -r requirements/production.txt
+   - deactivate
+ artifacts:
+   paths:
+     - venv
+
+test-job:
+ tags:
+   - gitlab-org-docker
+ stage: test
+ script:
+   - echo "Activating virtual environment..."
+   - source venv/bin/activate
+   - echo "Running unit tests..."
+   - python src/manage.py test --parallel
+   - deactivate
+   - echo "All tests successfully passed."
+
+variables:
+ CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_PIPELINE_IID
+
+release-job:
+ tags:
+   - gitlab-org-docker
+ stage: release
+ before_script:
+   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+ script:
+   - docker build -t $CONTAINER_IMAGE .
+   - docker push $CONTAINER_IMAGE
+ after_script:
+   - docker logout
+
+deploy-job:
+ tags:
+   - gitlab-org-docker
+ stage: deploy
+ before_script:
+   - chmod 400 $SSH_KEY
+ script:
+   - ssh -o StrictHostKeyChecking=no -i $SSH_KEY husan@195.158.2.199 "
+     docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
+     docker run -d -p 8000:8000 $CONTAINER_IMAGE"

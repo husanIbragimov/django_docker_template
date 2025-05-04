@@ -1,0 +1,24 @@
+server {
+    listen 80;  # HTTP uchun tinglash
+
+    server_name 195.158.2.199; # Server nomi yoki IP manzili
+    client_max_body_size 100M;
+
+    location /static/ {
+        alias /home/devops/AcademicMobility/static/;  # Static fayllar konteyner ichida joylashgan
+    }
+
+    # Media fayllar uchun sozlash
+    location /media/ {
+        alias /home/devops/AcademicMobility/media/;  # Media fayllarni to'g'ri yo'naltirish
+    }
+
+    # Django ilovasiga so'rovlarni yo'naltirish
+    location / {
+        proxy_pass http://localhost:8000;  # Django ilovasiga so'rovni yo'naltirish
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
