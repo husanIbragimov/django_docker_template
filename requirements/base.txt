@@ -8,7 +8,7 @@ Django==5.2 # https://www.djangoproject.com/
 django-extensions==4.1 # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html
 django-import-export==4.3.7 # https://django-import-export.readthedocs.io/en/latest/installation.html
 django-filter==25.1 # https://pypi.org/project/django-filter/
-django-debug-toolbar==5.1.0 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+django-debug-toolbar==5.2.0 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
 django-jazzmin==3.0.1
 
 # Django REST Framework
