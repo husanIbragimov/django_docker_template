@@ -14,7 +14,7 @@ Folder Structure Conventions
     ├── docker                  # Docker files
     ├── scripts                 # Shortcut command files
     ├── requirements            # Third party libraries
-    ├── src                     # Project applicateions directory ('lib' or 'apps') 
+    ├── src                     # Project applicateions directory ('lib' or 'apps')
     └── README.md
     └── ...
 
@@ -55,6 +55,7 @@ This project has the following prerequisites
 ```bash
   pip install pre-commit
   pre-commmit install
+  pre-commit run --all-files
 ```
 
 - Type the command below to deploy the project locally:

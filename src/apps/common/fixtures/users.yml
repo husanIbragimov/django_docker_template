@@ -42,18 +42,17 @@
     username: "admin6@gmail.com"
     password: "12345678Da"
     role: "sales_manager"
-    
+
 - model: "user.User"
   pk: 7
   fields:
     username: "admin7@gmail.com"
     password: "12345678Da"
     role: "sales_manager"
-    
+
 - model: "user.User"
   pk: 8
   fields:
     username: "admin8@gmail.com"
     password: "12345678Da"
     role: "sales_manager"
-    

@@ -25,7 +25,7 @@ class Command(BaseCommand):
                     User.objects.create(
                         username=item["fields"]["username"],
                         password=item["fields"]["password"],
-                        role = item["fields"]["role"],
+                        role=item["fields"]["role"],
                     )
                     i += 1
         except FileNotFoundError as e:

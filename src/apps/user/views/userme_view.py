@@ -1,6 +1,7 @@
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
 from apps.user.models import User
 from apps.user.serializers.userme_serializer import UserMeSerializer
 
@@ -23,4 +24,3 @@ class UserMeView(RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-

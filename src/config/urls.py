@@ -7,7 +7,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 # API URLS
 urlpatterns = [
-    path('admin/panel/', admin.site.urls),
+    path("admin/panel/", admin.site.urls),
     path("api/v1/", include("apps.v1"), name="base"),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
@@ -41,6 +41,5 @@ if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
     urlpatterns += [
-        path('__debug__/', include('debug_toolbar.urls')),
-
+        path("__debug__/", include("debug_toolbar.urls")),
     ]

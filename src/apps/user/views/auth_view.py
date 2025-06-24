@@ -1,10 +1,13 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework import status, permissions
+from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.user.serializers.auth_serializer import AuthResponseSerializer, LogoutSerializer
+from apps.user.serializers.auth_serializer import (
+    AuthResponseSerializer,
+    LogoutSerializer,
+)
 from apps.user.services.auth_service import AuthService
 
 
@@ -33,4 +36,3 @@ class LogoutAPIView(APIView):
         refresh_token: str = request.data.get("refresh")
         self.service_class.logout(refresh_token)
         return Response(status=status.HTTP_205_RESET_CONTENT)
-

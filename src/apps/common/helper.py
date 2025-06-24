@@ -8,7 +8,8 @@ def validate_file_size(value):
         raise ValidationError("The maximum file size that can be uploaded is 10MB")
     else:
         return value
-    
+
+
 def validate_image_size(value):
     img = Image.open(value)
     width, height = img.size
@@ -16,4 +17,3 @@ def validate_image_size(value):
         raise ValidationError("The maximum image size that can be uploaded is 1920x1080")
     else:
         return value
-    

@@ -4,7 +4,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class AuthService:
-
     @classmethod
     def auth_token(cls, username: str, password: str) -> dict[str, str]:
         """
@@ -16,10 +15,7 @@ class AuthService:
 
         refresh = RefreshToken.for_user(user)
 
-        return {
-            "access": str(refresh.access_token),
-            "refresh": str(refresh)
-        }
+        return {"access": str(refresh.access_token), "refresh": str(refresh)}
 
     @classmethod
     def logout(cls, refresh_token: str) -> None:
