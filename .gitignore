@@ -284,3 +284,4 @@ server_credentials/
 .vscode/
 
 /docker/docker-compose.override.yml
+/docker/.volumes/
