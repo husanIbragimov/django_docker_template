@@ -2,25 +2,11 @@ version: '3.9'
 
 services:
 
-  nginx:
-    image: nginx:1.27
-    container_name: nginx
-    networks:
-      - shared_network
-    ports:
-      - "8001:8000"
-    volumes:
-      - ./.conf/docker-nginx.conf:/etc/nginx/nginx.conf
-      - ./static:/app/static
-      - ./media:/app/media
-
-    depends_on:
-      - web
-
-
   web:
-    build: ..
-    container_name: web
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: slab_web
     networks:
       - shared_network
     command: >
@@ -30,15 +16,15 @@ services:
                   python manage.py migrate &&
                   gunicorn --workers ${WORKERS_COUNT:-4} --bind 0.0.0.0:8000 config.wsgi:application"
     volumes:
-      - ./src:/app/src
-      - ./static:/app/static
-      - ./media:/app/media
-      - ./logs:/app/logs
-      - ./assets:/app/assets
+      - ./../src:/app/src
+      - ./../static:/app/static
+      - ./../media:/app/media
+      - ./../logs:/app/logs
+      - ./../assets:/app/assets
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ./../.envs/.env
     depends_on:
       - redis
       - postgres
@@ -48,9 +34,9 @@ services:
   
   postgres:
     image: postgres:17.0
-    container_name: db
+    container_name: slab_db
     env_file:
-      - .env
+      - ./../.envs/.env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -65,7 +51,7 @@ services:
 
   redis:
     image: redis:7.2-alpine
-    container_name: redis
+    container_name: slab_redis
     restart: always
     ports:
       - "6379:6379"
@@ -76,20 +62,22 @@ services:
       - ./.volumes/redis_data:/data
 
   celery:
-    build: ..
-    container_name: celery
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: slab_celery
     networks:
       - shared_network
     command: celery -A config worker --loglevel=INFO --concurrency=${CELERY_WORKERS}
     volumes:
-      - ./src:/app/src
-      - ./media:/app/media
-      - ./logs:/app/logs
+      - ./../src:/app/src
+      - ./../media:/app/media
+      - ./../logs:/app/logs
     depends_on:
       - redis
       - web
     env_file:
-      - .env
+      - ./../.envs/.env
 
 networks:
   shared_network:

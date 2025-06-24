@@ -283,3 +283,4 @@ server_credentials/
 /static/
 .vscode/
 
+/docker/docker-compose.override.yml

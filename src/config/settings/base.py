@@ -8,9 +8,9 @@ from environs import Env
 from .swagger_conf import *  # noqa
 
 env = Env()
-env.read_env(".env")
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+env.read_env(f"{BASE_DIR.parent}/.envs/.env")
 
 SECRET_KEY = env.str("SECRET_KEY", "secret")
 

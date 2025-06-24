@@ -1,15 +1,23 @@
 FROM python:3.12-slim
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV SANOQ_DEV prod
+# Env variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    SLAB_DEV=prod
 
-RUN apt-get update && apt-get install -y netcat-openbsd && apt-get clean
+# OS packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY ../requirements/base.txt .
-COPY ../requirements/production.txt .
-RUN pip install -r production.txt
+
+# Python dependencies
+COPY ./../requirements/base.txt ./
+COPY ./../requirements/production.txt ./
+RUN pip install --upgrade pip && pip install -r production.txt
+
+# App code
 WORKDIR /app/src
-COPY ../src /app/src
-COPY ../.envs /app/.envs
+COPY ./../src ./src
+COPY ../.envs/.env /app/.envs/.env
