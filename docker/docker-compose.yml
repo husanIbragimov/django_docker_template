@@ -19,7 +19,7 @@ services:
 
 
   web:
-    build: .
+    build: ..
     container_name: web
     networks:
       - shared_network
@@ -76,7 +76,7 @@ services:
       - ./.volumes/redis_data:/data
 
   celery:
-    build: .
+    build: ..
     container_name: celery
     networks:
       - shared_network

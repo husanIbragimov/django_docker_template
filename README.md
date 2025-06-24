@@ -11,12 +11,10 @@ Folder Structure Conventions
 
     .
     ├── .envs                   # Environment veriables
-    ├── compose                 # Docker files and bash commands
+    ├── docker                  # Docker files
+    ├── scripts                 # Shortcut command files
     ├── requirements            # Third party libraries
-    ├── config                  # Project configuration files 
     ├── src                     # Project applicateions directory ('lib' or 'apps') 
-    ├── local.yml               # docker-compose (running in local)
-    ├── production.yml          # docker-compose (to deploy in production)
     └── README.md
     └── ...
 
@@ -32,37 +30,37 @@ Folder Structure Conventions
 
 This project has the following prerequisites
 
-- python 3.9.8
-- docker 19.03.12
-- docker-compose 1.25.0
+- python 3.12
+- docker  28.0.4
+- docker-compose v2.35.1
 
 ## Setup
 
 - Type the command below to setup the project locally:
 
--  docker-compose -f local.yml up --build
+-  cd docker && docker-compose --env-file .envs/.env up --build -d
 
 ### Development
 
 - Install virtual environment:
 
 ```
-git clone https://github.com/orginazation/name_api.git
-cd root folder
-python -m venv --prompt="v" .env
+    git clone https://github.com/orginazation/name_api.git
+    cd root folder
+    python -m venv --prompt="v" .env
 ```
 
 - If *pre commit* has not been installed please install by running following command:
 
-```
-pip install pre-commit
-pre-commmit install
+```bash
+  pip install pre-commit
+  pre-commmit install
 ```
 
 - Type the command below to deploy the project locally:
 
-```
-docker-compose -f local.yml up -d
+```bash
+  cd docker && docker-compose --env-file .envs/.env up --build -d
 ```
 
 - You should be good to go now
