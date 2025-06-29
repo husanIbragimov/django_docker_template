@@ -3,6 +3,7 @@ from pathlib import Path
 from environs import Env
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 env = Env()
 env.read_env(f"{BASE_DIR.parent}/.envs/.env")
 

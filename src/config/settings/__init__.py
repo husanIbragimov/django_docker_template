@@ -14,3 +14,4 @@ from .elastic_apm_settings import *
 from .migrations import *
 from .oauth import *
 from .sentry_conf import *
+from .swagger_conf import *

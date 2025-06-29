@@ -61,6 +61,37 @@ services:
     volumes:
       - ./.volumes/redis_data:/data
 
+  rabbit:
+    image: rabbitmq:4.0-management
+    container_name: template_rabbit
+    hostname: rabbit
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
+    ports:
+      - "5672:5672"
+      - "15682:15672"
+    networks:
+      - shared_network
+    volumes:
+      - ./.volumes/rabbitmq_data:/var/lib/rabbitmq
+    depends_on:
+      - postgres
+    env_file:
+      - ./../.envs/.env
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
   celery:
     build:
       context: ..
@@ -68,14 +99,15 @@ services:
     container_name: template_celery
     networks:
       - shared_network
-    command: celery -A config worker --loglevel=INFO --concurrency=${CELERY_WORKERS}
+    command: celery -A config worker --loglevel=INFO --concurrency=${CELERY_WORKERS:-2}
     volumes:
       - ./../src:/app/src
       - ./../media:/app/media
       - ./../logs:/app/logs
     depends_on:
-      - redis
-      - web
+#      - redis
+      - postgres
+      - rabbit
     env_file:
       - ./../.envs/.env
 

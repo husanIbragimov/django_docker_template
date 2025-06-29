@@ -1,14 +1,15 @@
 import traceback
 from datetime import datetime
 
-from _auth.models import ScientistUser
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from logger import errorRequestLogger
 from rest_framework import exceptions
 from rest_framework.exceptions import APIException
 from rest_framework.views import exception_handler
+
+from apps._auth.models import User
+from apps.logger import errorRequestLogger
 
 
 def restapi_exception_handler(exc, context):
@@ -53,9 +54,6 @@ def _get_current_time():
 
 
 def _get_user_info(request):
-    if request.user is None:
-        return "AnonymousUser"
     if isinstance(request.user, User) and request.user.is_authenticated:
         return f"{request.user.username} (ID: {request.user.id})"
-    elif isinstance(request.user, ScientistUser):
-        return f"Scientist (ID: {request.user.id} Name: {request.user.full_name})"
+    return "AnonymousUser"

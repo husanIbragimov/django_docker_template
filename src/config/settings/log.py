@@ -1,11 +1,11 @@
 import os
 from logging.handlers import TimedRotatingFileHandler
 
-from django.conf import settings
+from .env import BASE_DIR
 
 LOG_LEVEL = "ERROR"
 
-logs_path = os.path.join(settings.BASE_DIR.parent, "logs")
+logs_path = os.path.join(BASE_DIR.parent, "logs")
 if not os.path.exists(logs_path):
     os.makedirs(logs_path)
 

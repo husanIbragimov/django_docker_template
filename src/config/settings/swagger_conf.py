@@ -6,7 +6,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": TITLE,
     "DESCRIPTION": DESCRIPTION,
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticated"],
     "SWAGGER_UI_SETTINGS": {
         "deepLinking": True,
         "persistAuthorization": True,
@@ -35,7 +35,7 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
     "SERVE_URLCONF": "config.urls",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SERVE_PUBLIC": False,
+    # "SERVE_PUBLIC": False,
     "VALIDATOR_URL": None,
     "SWAGGER_UI_FAVICON_HREF": None,
     "SWAGGER_UI_LOGO_HREF": None,

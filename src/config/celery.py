@@ -4,13 +4,11 @@ import cronitor.celery
 from celery import Celery
 from celery.schedules import crontab
 
-from .settings.base import env
-
-CRONITOR_API_KEY = env.str("CRONITOR_API_KEY", "secret")
+from .settings.env import CRONITOR_API_KEY
 
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 app = Celery("config")
 app.config_from_object("django.conf:settings", namespace="CELERY")

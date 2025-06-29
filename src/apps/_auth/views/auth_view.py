@@ -32,7 +32,7 @@ class LogoutAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     service_class = AuthService()
 
-    def post(self, request):
+    def post(self, request) -> Response:
         refresh_token: str = request.data.get("refresh")
         self.service_class.logout(refresh_token)
         return Response(status=status.HTTP_205_RESET_CONTENT)
