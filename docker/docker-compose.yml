@@ -105,9 +105,7 @@ services:
       - ./../media:/app/media
       - ./../logs:/app/logs
     depends_on:
-#      - redis
-      - postgres
-      - rabbit
+      - redis
     env_file:
       - ./../.envs/.env
 
