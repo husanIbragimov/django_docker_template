@@ -1,8 +1,10 @@
-# By Default swagger ui is available only to admin user(s). You can change permission classes to change that
+from .env import DESCRIPTION, TITLE
+
+# By Default swagger ui is available only to admin _auth(s). You can change permission classes to change that
 # See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Sanoq Project API",
-    "DESCRIPTION": "{Name} of API endpoints of Project",
+    "TITLE": TITLE,
+    "DESCRIPTION": DESCRIPTION,
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SWAGGER_UI_SETTINGS": {

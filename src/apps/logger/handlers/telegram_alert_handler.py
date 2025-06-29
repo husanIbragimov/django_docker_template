@@ -1,6 +1,8 @@
 import logging
 import time
+
 from ..tasks.notify_admin_task import notifyAdminTask
+
 
 class TelegramBotAlertHandler(logging.Handler):
 

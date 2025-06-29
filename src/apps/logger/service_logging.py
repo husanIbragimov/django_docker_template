@@ -8,11 +8,11 @@ def _method_logger(method):
         try:
             return method(*args, **kwargs)
         except Exception as e:
-            stack_trace = ''.join(traceback.format_exception(None, e, e.__traceback__))
+            stack_trace = "".join(traceback.format_exception(None, e, e.__traceback__))
             # adminLogger.error(f"Service error in {method.__name__}: {e}\nStack trace:\n{stack_trace}")
             raise e
-    return wrapper
 
+    return wrapper
 
 
 class LoggingMeta(type):

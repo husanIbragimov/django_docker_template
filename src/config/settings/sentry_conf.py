@@ -1,11 +1,11 @@
-import os
-
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+from .env import SENTRY_DSN
+
 # Sentry config
 sentry_sdk.init(
-    dsn=os.environ["SENTRY_DSN"],
+    dsn=SENTRY_DSN,
     integrations=[
         DjangoIntegration(),
     ],

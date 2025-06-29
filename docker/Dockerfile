@@ -3,7 +3,7 @@ FROM python:3.12-slim
 # Env variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    SLAB_DEV=prod
+    TEMPLATE_DEV=prod
 
 # OS packages
 RUN apt-get update && apt-get install -y --no-install-recommends \

@@ -24,12 +24,11 @@ LOGGING = {
     },
     "handlers": {
         # -- telegram bot handler
-        # 'telegrambot_alert': {
-        #     'level': LOG_LEVEL,
-        #     'class': 'logger.handlers.telegram_alert_handler.TelegramBotAlertHandler',
-        #     'formatter': 'verbose',
-        # },
-        # TODO: add telegram bot handler
+        "telegrambot_alert": {
+            "level": LOG_LEVEL,
+            "class": "apps.logger.handlers.TelegramBotAlertHandler",
+            "formatter": "verbose",
+        },
         # -- error log handler
         "error_log_file": {
             "level": LOG_LEVEL,
@@ -38,6 +37,16 @@ LOGGING = {
             "interval": 1,
             "backupCount": 30,
             "filename": f"{logs_path}/error.log",
+            "formatter": "verbose",
+            "encoding": "utf-8",
+        },
+        "external_service_file": {
+            "level": LOG_LEVEL,
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "when": "midnight",
+            "interval": 1,
+            "backupCount": 30,
+            "filename": f"{logs_path}/external_service_error.log",
             "formatter": "verbose",
             "encoding": "utf-8",
         },
@@ -54,7 +63,7 @@ LOGGING = {
         },
         # Console handler
         "console": {
-            "level": "INFO",
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
@@ -79,18 +88,23 @@ LOGGING = {
         },
         # -- Celery logger
         "celery_logger": {
-            "handlers": ["celery_log_file", "console"],  # telegrambot_alert
+            "handlers": ["celery_log_file", "console", "telegrambot_alert"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         # -- Error logger
         "error_request_logger": {
-            "handlers": ["error_log_file"],  # telegrambot_alert
+            "handlers": ["error_log_file", "console", "telegrambot_alert"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         "kafka_logger": {
-            "handlers": ["console", "kafka_log"],  # telegrambot_alert
+            "handlers": ["console", "telegrambot_alert", "kafka_log"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        "external_service_logger": {
+            "handlers": ["external_service_file", "console", "telegrambot_alert"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
