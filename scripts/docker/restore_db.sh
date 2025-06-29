@@ -5,7 +5,7 @@ export $(grep -v '^#' .env | xargs)
 export $(grep -v '^#' .env.local | xargs)
 
 # Container nomi
-CONTAINER=$(docker ps -aqf "name=stats-db")
+CONTAINER=$(docker ps -aqf "name=$DB_NAME")
 
 # Foydalanuvchidan fayl nomini so'rash
 read -p "⬇️ Tiklash uchun SQL fayl nomini kiriting (masalan: dump_20-06-2025_10_30_00.sql): " DUMP_FILE
