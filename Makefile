@@ -6,43 +6,43 @@ endif
 
 
 build:
-	docker-compose -f local.yml up --build --remove-orphans
+	cd docker/ && docker-compose --env-file .envs/.env up --build --remove-orphans
 
 up:
-	docker-compose -f local.yml up -d
+	cd docker/ && docker-compose --env-file .envs/.env up -d
 
 down:
-	docker-compose -f local.yml down
+	cd docker/ && docker-compose --env-file .envs/.env down
 
 down-v:
-	docker-compose -f local.yml down -v
+	cd docker/ && docker-compose --env-file .envs/.env down -v
 
 logs:
-	docker-compose -f local.yml logs -f
+	cd docker/ && docker-compose --env-file .envs/.env logs -f
 
 makemigrations:
-	docker-compose -f local.yml run --rm django python manage.py makemigrations
+	cd docker/ && docker-compose --env-file .envs/.env run --rm django python manage.py makemigrations
 
 migrate:
-	docker-compose -f local.yml run --rm django python manage.py migrate --no-input
+	cd docker/ && docker-compose --env-file .envs/.env run --rm django python manage.py migrate --no-input
 
 superuser:
-	docker-compose -f local.yml run --rm django python manage.py createsuperuser
+	cd docker/ && docker-compose --env-file .envs/.env run --rm django python manage.py createsuperuser
 
 shell:
-	docker-compose -f local.yml run --rm django python manage.py shell_plus
+	cd docker/ && docker-compose --env-file .envs/.env run --rm django python manage.py shell_plus
 
 restart:
-	docker-compose -f local.yml restart
+	cd docker/ && docker-compose --env-file .envs/.env restart
 
 backup:
-	docker compose -f local.yml exec postgres backup
+	cd docker/ && docker compose --env-file .envs/.env exec postgres backup
 
 backups:
-	docker compose -f local.yml exec postgres backups
+	cd docker/ && docker compose --env-file .envs/.env exec postgres backups
 
 copy-backups:
-	docker cp $(docker compose -f local.yml ps -q postgres):/backups ./backups
+	cd docker/ && docker cp $(cd docker/ && docker compose --env-file .envs/.env ps -q postgres):/backups ./backups
 
 restore:
-	docker compose -f local.yml exec postgres restore file_name.sql.gz
+	cd docker/ && docker compose --env-file .envs/.env exec postgres restore file_name.sql.gz
