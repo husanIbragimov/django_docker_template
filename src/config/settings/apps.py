@@ -1,11 +1,6 @@
 LOCAL_APPS = [
     "apps._auth",
-    "apps._manage",
     "apps.common",
-    "apps.application",
-    "apps.organization",
-    "apps.report",
-    "apps.review",
     "apps.upload",
 ]
 

@@ -33,7 +33,7 @@ repos:
       - id: migrations-check
         language: system
         name: Check for uncreated migrations.
-        entry: python manage.py makemigrations --check --dry-run
+        entry: python src/manage.py makemigrations --check --dry-run
         types: [ "python" ]
         pass_filenames: false
   - repo: https://github.com/pycqa/isort
