@@ -108,16 +108,16 @@ services:
     env_file:
       - ./../.envs/.env
 
-  nginx:
-    image: nginx:1.27
-    networks:
-      - shared_network
-    ports:
-      - "8000:80"
-    volumes:
-      - ./.conf/docker-nginx.conf:/etc/nginx/nginx.conf
-      - ./../static:/app/static
-      - ./../media:/app/media
+#  nginx:
+#    image: nginx:1.27
+#    networks:
+#      - shared_network
+#    ports:
+#      - "8000:80"
+#    volumes:
+#      - ./.conf/docker-nginx.conf:/etc/nginx/nginx.conf
+#      - ./../static:/app/static
+#      - ./../media:/app/media
 
 networks:
   shared_network:
