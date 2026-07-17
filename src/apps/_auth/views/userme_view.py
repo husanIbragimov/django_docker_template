@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -6,6 +7,7 @@ from apps._auth.models import User
 from apps._auth.serializers.userme_serializer import UserMeSerializer
 
 
+@extend_schema(tags=["User"])
 class UserMeView(RetrieveUpdateAPIView):
     """
     UserMeView is a view that allows authenticated users to retrieve and update their own _auth information.

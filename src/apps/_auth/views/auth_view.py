@@ -15,7 +15,7 @@ class AuthAPIView(GenericAPIView):
     serializer_class = AuthResponseSerializer
     permission_classes = (permissions.AllowAny,)
 
-    @extend_schema(responses=AuthResponseSerializer)
+    @extend_schema(tags=["Auth"], responses=AuthResponseSerializer)
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -27,6 +27,7 @@ class AuthAPIView(GenericAPIView):
         return Response(tokens, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Auth"])
 class LogoutAPIView(APIView):
     serializer_class = LogoutSerializer
     permission_classes = (permissions.IsAuthenticated,)

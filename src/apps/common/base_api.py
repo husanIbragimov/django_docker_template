@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Type
 
+from rest_framework import mixins, status
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
 
@@ -68,3 +71,68 @@ class BaseGenericAPI(_BaseAPI):
     @property
     def serializer(self):
         return self._serializer
+
+
+class BaseGenericListCreateAPI(BaseGenericAPI):
+    """BaseGenericAPI variant for a view combining GET list + POST create at one URL.
+
+    perform_check always runs on every HTTP method (see _BaseAPI.dispatch), so a plain
+    BaseGenericAPI would try to validate an empty GET body against serializer_class and
+    fail. This skips that validation for anything other than POST.
+    """
+
+    def perform_check(self, request, *args, **kwargs):
+        if request.method != "POST":
+            return None
+        return super().perform_check(request, *args, **kwargs)
+
+
+class BaseGenericUpdateAPI(BaseGenericAPI):
+    """BaseGenericAPI variant for PUT/PATCH endpoints, safe to combine with retrieve/destroy.
+
+    Validates against the existing instance (so unique-field validators correctly exclude
+    it) instead of BaseGenericAPI's default instance-less `serializer_class(data=...)`, and
+    only runs on PUT/PATCH so GET/DELETE on the same view aren't forced through validation.
+    """
+
+    def perform_check(self, request, *args, **kwargs):
+        if request.method not in ("PUT", "PATCH"):
+            return None
+        instance = self.get_object()
+        partial = request.method == "PATCH"
+        self._serializer = self.serializer_class(instance, data=request.data, partial=partial)
+        self._serializer.is_valid(raise_exception=True)
+        self._validate_data = self._serializer.validated_data
+        return self._validate_data
+
+
+class AdminListCreateAPI(mixins.ListModelMixin, BaseGenericListCreateAPI):
+    """Standard admin CRUD collection endpoint: GET list (IsAdminUser) + POST create."""
+
+    permission_classes = (IsAdminUser,)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        instance = self.serializer.save(created_by=request.user)
+        return Response(self.get_serializer(instance).data, status=status.HTTP_201_CREATED)
+
+
+class AdminDetailAPI(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, BaseGenericUpdateAPI):
+    """Standard admin CRUD detail endpoint: GET/DELETE (IsAdminUser) + PUT/PATCH update."""
+
+    permission_classes = (IsAdminUser,)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        instance = self.serializer.save(updated_by=request.user)
+        return Response(self.get_serializer(instance).data)
+
+    def patch(self, request, *args, **kwargs):
+        return self.put(request, *args, **kwargs)

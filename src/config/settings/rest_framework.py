@@ -18,6 +18,10 @@ REST_FRAMEWORK = {
     # "DEFAULT_RENDERER_CLASSES": (
     #     "common.response.json_renderer.CustomJSONRenderer",
     # ),
+    "DEFAULT_THROTTLE_RATES": {
+        "lead": "5/hour",
+        "subscription": "3/hour",
+    },
 }
 
 SIMPLE_JWT = {
