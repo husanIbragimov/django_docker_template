@@ -52,7 +52,7 @@ repos:
       - id: django-test
         language: system
         name: django-test
-        entry: python src/manage.py test --parallel --exclude-tag=dev-mode
+        entry: python src/manage.py test src --top-level-directory src --parallel --exclude-tag=dev-mode
         always_run: true
         types: [ "python" ]
         pass_filenames: false

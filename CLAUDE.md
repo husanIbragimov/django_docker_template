@@ -57,7 +57,7 @@ python src/manage.py <command>
 ### Tests
 
 ```bash
-python src/manage.py test --parallel --exclude-tag=dev-mode
+python src/manage.py test src --top-level-directory src --parallel --exclude-tag=dev-mode
 ```
 
 This exact command also runs as a pre-commit hook (`django-test`), so it must pass before commits succeed. To run a single app's tests: `python src/manage.py test apps.upload`.
