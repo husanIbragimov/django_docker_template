@@ -10,4 +10,5 @@ urlpatterns = [
         include(("apps._auth.urls.user_urls", "user"), namespace="user"),
     ),
     path("upload/", include(("apps.upload.urls", "upload"), namespace="upload")),
+    path("rbac/", include(("apps.rbac.urls", "rbac"), namespace="rbac")),
 ]

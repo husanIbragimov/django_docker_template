@@ -1,11 +1,5 @@
 -r base.txt
 
-# Python
-
-# Django
-
-# Rest Framework
-
-# Postgres
-
-#Celery monitoring
+# Dev tooling — not installed in the Docker image
+pre-commit==4.2.0 # https://pre-commit.com/
+django-extensions==4.1 # https://django-extensions.readthedocs.io/en/latest/installation_instructions.html

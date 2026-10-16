@@ -2,6 +2,7 @@ LOCAL_APPS = [
     "apps._auth",
     "apps.common",
     "apps.upload",
+    "apps.rbac",
 ]
 
 THIRD_PARTY_APPS = [

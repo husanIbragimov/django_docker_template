@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-A modular, Docker-first Django + DRF backend template. Core stack: Django 5.2, Django REST Framework, SimpleJWT auth, Celery (Redis/RabbitMQ broker), PostgreSQL, drf-spectacular (Swagger docs), Sentry, and Telegram-based exception alerting.
+A modular, Docker-first Django + DRF backend template. Core stack: Django 5.2, Django REST Framework, SimpleJWT auth, Celery (Redis broker), PostgreSQL, drf-spectacular (Swagger docs), Sentry, and Telegram-based exception alerting.
 
 All Django code lives under `src/`; `manage.py` and app code are rooted there, not at the repo root.
 
@@ -17,14 +17,23 @@ cp .envs/.env.example .envs/.env
 cp .envs/.env.local.example .envs/.env.local
 ```
 
-Required vars include `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, `KAFKA_SERVERS`, `BOT_TOKEN`/`ADMIN_CHAT_ID`/`THREAD_ID` (Telegram alerts), `CRONITOR_API_KEY`, `SENTRY_DSN`, plus Postgres/RabbitMQ credentials used by `docker-compose.yml`.
+Required vars include `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, `KAFKA_SERVERS`, `BOT_TOKEN`/`ADMIN_CHAT_ID`/`THREAD_ID` (Telegram alerts), `CRONITOR_API_KEY`, `SENTRY_DSN`, plus Postgres credentials used by the compose files. `.envs/.env.local` is loaded on top of `.env` (override) when running on the host — it points `POSTGRES_HOST`/`POSTGRES_PORT`/`REDIS_URL` at the ports published by `docker-compose.local.yml`; it is never visible inside containers.
 
 ## Common commands
 
-Everything runs through Docker Compose, driven from the `Makefile` (each target `cd`s into `docker/` and passes `--env-file ../.envs/.env`):
+Everything runs through Docker Compose via `scripts/compose.sh <dev|prod|local>` (cds into `docker/`, picks `docker-compose.<env>.yml`, passes `--env-file ../.envs/.env`). Makefile targets use it with `ENV ?= dev` — e.g. `make up ENV=prod`.
 
 ```bash
-make build          # build images and start stack (docker-compose up --build)
+make dev   / bash scripts/run_dev.sh     # full stack + nginx (static/media) on http://localhost:8000
+make prod  / bash scripts/run_prod.sh    # full stack, no nginx
+make local / bash scripts/run_local.sh   # postgres + redis only; run Django/Celery on the host (uses .envs/.env.local)
+bash scripts/down.sh [dev|prod|local]
+```
+
+Other targets:
+
+```bash
+make build          # build images and start stack (compose up --build)
 make up              # start containers detached
 make down            # stop containers
 make down-v          # stop containers and remove volumes
@@ -37,7 +46,7 @@ make restart         # restart containers
 make backup / make backups / make copy-backups / make restore   # Postgres backups via the postgres service's backup/restore entrypoints
 ```
 
-Alternative local (non-Docker) DB backup/restore scripts live in `scripts/local/`; Docker-side equivalents are in `scripts/docker/`. `scripts/build.sh` does a `git pull` + `docker-compose up --build -d` for deployment; `scripts/clear_docker_build_cache.sh` clears build cache before a rebuild.
+Alternative local (non-Docker) DB backup/restore scripts live in `scripts/local/`; Docker-side equivalents are in `scripts/docker/`. `scripts/build.sh` does a `git pull` + `run_prod.sh` for deployment; `scripts/clear_docker_build_cache.sh` clears build cache before a rebuild.
 
 Running Django management commands directly (e.g. inside the `template_web` container or a local venv) always targets `src/manage.py`:
 
@@ -65,13 +74,17 @@ Enforced via `.pre-commit-config.yaml` (black, flake8, isort, mypy, plus a migra
 ├── docker/
 │   ├── Dockerfile               # web/celery image
 │   ├── DockerfileCron           # cron-worker image
-│   └── docker-compose.yml       # web, postgres, redis, rabbit, celery services
+│   ├── docker-compose.prod.yml  # web, postgres, redis, celery (base for the other two)
+│   ├── docker-compose.dev.yml   # `include`s prod + adds nginx (docker/.conf/docker-nginx.conf)
+│   └── docker-compose.local.yml # postgres + redis only (`extends` prod), for host-run Django/Celery
 ├── requirements/
 │   ├── base.txt                 # shared deps (Django, DRF, Celery, Kafka, Sentry, ...)
 │   ├── local.txt                # dev-only additions on top of base.txt
 │   └── production.txt           # prod-only additions on top of base.txt
 ├── scripts/
-│   ├── build.sh                  # git pull + docker-compose up --build -d
+│   ├── compose.sh                # docker compose wrapper: compose.sh <dev|prod|local> <args>
+│   ├── run_dev.sh / run_prod.sh / run_local.sh
+│   ├── build.sh                  # git pull + run_prod.sh
 │   ├── clear_docker_build_cache.sh
 │   ├── down.sh
 │   ├── remove_none_docker_images.sh
@@ -152,8 +165,8 @@ Rather than calling `gettext_lazy` inline, translatable strings are declared onc
 
 ### Background jobs
 
-Celery app is defined in `src/config/celery.py` (broker/backend config lives in Django settings via `CELERY_*` env vars), with Cronitor monitoring wired in via `cronitor.celery.initialize(app)`. Beat schedule uses `django_celery_beat`'s `DatabaseScheduler`. The `celery` service in `docker/docker-compose.yml` runs `celery -A config worker`; there's also a separate `DockerfileCron` for cron-style jobs.
+Celery app is defined in `src/config/celery.py` (broker/backend config lives in `config/settings/celery_conf.py`, built from the single `REDIS_URL` env var: DB 0 for Celery, DB 1 for the cache), with Cronitor monitoring wired in via `cronitor.celery.initialize(app)`. Beat schedule uses `django_celery_beat`'s `DatabaseScheduler`. The `celery` service in `docker/docker-compose.prod.yml` runs `celery -A config worker`; there's also a separate `DockerfileCron` for cron-style jobs.
 
 ### Docker topology
 
-`docker/docker-compose.yml` defines `web` (gunicorn, migrates + collectstatic on boot), `postgres`, `redis`, `rabbit` (RabbitMQ, currently unused by the `web`/`celery` services which point at Redis), and `celery`. All source is bind-mounted from `src/` so container restarts pick up code changes without rebuilding.
+`docker/docker-compose.prod.yml` defines `web` (gunicorn, migrates + collectstatic on boot), `postgres`, `redis`, and `celery` (Redis is the Celery broker/result backend on DB 0; the Django cache uses DB 1). All source is bind-mounted from `src/` so container restarts pick up code changes without rebuilding. `docker-compose.dev.yml` includes the prod file unchanged and only adds `nginx` (port 8000 → serves `/static/`, `/media/`, proxies the rest to `web:8000`); `docker-compose.local.yml` reuses `postgres`/`redis` via `extends`. Never copy service definitions between these files — change them in the prod file.

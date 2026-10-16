@@ -12,7 +12,9 @@ This repository is a modular and production-ready Django-based backend structure
 ├── docker/                   # Docker setup and configurations
 │   ├── Dockerfile            # Web container
 │   ├── DockerfileCron        # Cron container
-│   └── docker-compose.yml    # Multi-container orchestration
+│   ├── docker-compose.prod.yml   # Full stack (web, celery, postgres, redis)
+│   ├── docker-compose.dev.yml    # prod + nginx for static/media
+│   └── docker-compose.local.yml  # postgres + redis only
 ├── requirements/             # Python dependencies
 │   ├── base.txt
 │   ├── local.txt

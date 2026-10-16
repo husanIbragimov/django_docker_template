@@ -1,11 +1,36 @@
-.editorconfig
-.gitattributes
+# VCS / IDE / tooling
+.git
 .github
-.gitignore
 .gitlab-ci.yml
 .idea
+.vscode
+.mypy_cache
+.pytest_cache
 .pre-commit-config.yaml
+.editorconfig
+.gitattributes
+.gitignore
 .readthedocs.yml
 .travis.yml
+**/.DS_Store
+
+# Python artifacts
 venv/
-.git
+.venv/
+**/__pycache__
+**/*.py[cod]
+
+# Secrets — passed at runtime via env_file, never baked into the image
+.envs/
+
+# Runtime data (bind-mounted, not needed at build time)
+docker/.volumes/
+static/
+media/
+logs/
+assets/
+backups/
+
+# Docs
+README.md
+CLAUDE.md

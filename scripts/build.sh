@@ -1,9 +1,9 @@
 #!/bin/bash
-
+# Deploy: pull latest code and rebuild the prod stack
+set -e
+cd "$(dirname "$0")/.."
 echo "Building the project..."
 git pull origin main && echo "Project updated from the repository."
-cd docker/ && docker-compose --env-file ./../.envs/.env up --build -d
+bash scripts/run_prod.sh
 echo "Remove none images from computer"
-docker rmi -f $(docker images | grep "<none>" | awk "{print \$3}")
-echo "Containers running:"
-docker ps --format "{{.Names}}" | sort
+docker images -f "dangling=true" -q | xargs -r docker rmi -f

@@ -1,0 +1,16 @@
+# Local stack: only infrastructure (postgres + redis), reused from the prod file and published on host ports.
+# Django and Celery run by hand on the host and connect through these ports (see .envs/.env.local).
+services:
+  postgres:
+    extends:
+      file: docker-compose.prod.yml
+      service: postgres
+
+  redis:
+    extends:
+      file: docker-compose.prod.yml
+      service: redis
+
+networks:
+  shared_network:
+    driver: bridge

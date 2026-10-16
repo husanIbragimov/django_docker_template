@@ -5,44 +5,57 @@ ifneq (,$(wildcard ./.env))
 endif
 
 
+# Stack selector: make up ENV=prod | ENV=dev (default, with nginx) | ENV=local (postgres + redis only)
+ENV ?= dev
+COMPOSE = bash scripts/compose.sh $(ENV)
+
 build:
-	cd docker/ && docker-compose --env-file ../.envs/.env up --build --remove-orphans
+	$(COMPOSE) up --build --remove-orphans
 
 up:
-	cd docker/ && docker-compose --env-file ../.envs/.env up -d
+	$(COMPOSE) up -d
 
 down:
-	cd docker/ && docker-compose --env-file ../.envs/.env down
+	$(COMPOSE) down
 
 down-v:
-	cd docker/ && docker-compose --env-file ../.envs/.env down -v
+	$(COMPOSE) down -v
 
 logs:
-	cd docker/ && docker-compose --env-file ../.envs/.env logs -f
+	$(COMPOSE) logs -f
 
 makemigrations:
-	cd docker/ && docker-compose --env-file ../.envs/.env run --rm django python manage.py makemigrations
+	$(COMPOSE) run --rm web python manage.py makemigrations
 
 migrate:
-	cd docker/ && docker-compose --env-file ../.envs/.env run --rm django python manage.py migrate --no-input
+	$(COMPOSE) run --rm web python manage.py migrate --no-input
 
 superuser:
-	cd docker/ && docker-compose --env-file ../.envs/.env run --rm django python manage.py createsuperuser
+	$(COMPOSE) run --rm web python manage.py createsuperuser
 
 shell:
-	cd docker/ && docker-compose --env-file ../.envs/.env run --rm django python manage.py shell_plus
+	$(COMPOSE) run --rm web python manage.py shell_plus
 
 restart:
-	cd docker/ && docker-compose --env-file ../.envs/.env restart
+	$(COMPOSE) restart
 
 backup:
-	cd docker/ && docker compose --env-file ../.envs/.env exec postgres backup
+	$(COMPOSE) exec postgres backup
 
 backups:
-	cd docker/ && docker compose --env-file ../.envs/.env exec postgres backups
+	$(COMPOSE) exec postgres backups
 
 copy-backups:
-	cd docker/ && docker cp $(cd docker/ && docker compose --env-file ../.envs/.env ps -q postgres):/backups ./backups
+	docker cp $$($(COMPOSE) ps -q postgres):/backups ./backups
 
 restore:
-	cd docker/ && docker compose --env-file ../.envs/.env exec postgres restore file_name.sql.gz
+	$(COMPOSE) exec postgres restore file_name.sql.gz
+
+dev:
+	bash scripts/run_dev.sh
+
+prod:
+	bash scripts/run_prod.sh
+
+local:
+	bash scripts/run_local.sh

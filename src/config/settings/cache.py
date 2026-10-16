@@ -1,8 +1,6 @@
 import sys
 
-from .env import env
-
-REDIS_URL = env.str("REDIS_URL", "redis://redis:6379/1")
+from .env import REDIS_URL
 
 # manage.py test --parallel forks isolated worker processes that each get their own
 # database, but they'd all share one real Redis instance for cache/throttle state,
@@ -17,6 +15,6 @@ else:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": REDIS_URL,
+            "LOCATION": f"{REDIS_URL}/1",
         }
     }

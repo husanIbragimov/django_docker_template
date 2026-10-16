@@ -13,8 +13,8 @@ REST_FRAMEWORK = {
     # 'DEFAULT_SCHEMA_CLASS': 'common.schema.CustomAutoSchema',
     # 'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
     "EXCEPTION_HANDLER": "apps.logger.restapi_exception_handler.restapi_exception_handler",
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    # )
+    # Every API is protected by RBAC unless the view overrides permission_classes
+    "DEFAULT_PERMISSION_CLASSES": ("apps.rbac.permissions.HasApiAccess",),
     # "DEFAULT_RENDERER_CLASSES": (
     #     "common.response.json_renderer.CustomJSONRenderer",
     # ),
