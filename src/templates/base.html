@@ -1,125 +1,153 @@
-{% load static i18n %}
+{% load i18n %}
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE }}">
 
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title>
-    {% block title %}
-    warehouse_karantin
-    {% endblock title %}
-  </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Karantin's warehouse system" />
-  <meta name="author" content="firdavsDev" />
-  <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
+  <title>{% block title %}Django{% endblock title %}</title>
   {% block css %}
-  <!-- Latest compiled and minified Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css"
-    integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Your stuff: Third-party CSS libraries go here -->
-  <!-- This file stores project-specific CSS -->
+  <style>
+    /* Django brand palette */
+    :root {
+      --dj-dark: #092e20;
+      --dj-green: #0c4b33;
+      --dj-accent: #44b78b;
+      --dj-light: #c9f0dd;
+      --bg: #f8faf9;
+      --card: #ffffff;
+      --text: #1f2d27;
+      --muted: #5b6b64;
+      --border: #e1e8e4;
+    }
 
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1f17;
+        --card: #10291f;
+        --text: #e6f2ec;
+        --muted: #9db5aa;
+        --border: #1d3d30;
+        --dj-green: #c9f0dd;
+      }
+    }
 
-  <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+    * { box-sizing: border-box; }
 
+    html, body { height: 100%; margin: 0; }
 
+    body {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    .page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 6px solid var(--dj-accent);
+      border-radius: 10px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(9, 46, 32, 0.08);
+    }
+
+    .status-code {
+      margin: 0;
+      font-size: 96px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -2px;
+      color: var(--dj-accent);
+    }
+
+    .card h1 {
+      margin: 16px 0 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--dj-green);
+    }
+
+    .card p {
+      margin: 0 0 24px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 6px;
+      background: var(--dj-accent);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+
+    .btn:hover { background: #3a9c76; }
+
+    .messages { list-style: none; padding: 0; margin: 0 0 24px; text-align: left; }
+
+    .messages li {
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      border-left: 4px solid var(--dj-accent);
+      background: var(--dj-light);
+      color: var(--dj-dark);
+    }
+
+    .messages li.error { border-color: #ba2121; background: #ffefef; color: #ba2121; }
+    .messages li.warning { border-color: #c4a000; background: #fff8d6; color: #6b5800; }
+
+    footer {
+      padding: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    footer strong { color: var(--dj-accent); }
+
+    @media (max-width: 480px) {
+      .card { padding: 32px 20px; }
+      .status-code { font-size: 72px; }
+    }
+  </style>
   {% endblock css %}
-  <!-- Le javascript
-    ================================================== -->
-  {# Placed at the top of the document so pages load faster with defer #}
-  {% block javascript %}
-
-
-  <!-- Bootstrap JS -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
-    integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- Your stuff: Third-party javascript libraries go here -->
-
-
-  <!-- place project specific Javascript in this file -->
-
-
-  <script defer src="{% static 'js/project.js' %}"></script>
-
-
-  {% endblock javascript %}
+  {% block javascript %}{% endblock javascript %}
 </head>
 
 <body>
-  <div class="mb-1">
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
-      <div class="container-fluid">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-          aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#">Home</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="visually-hidden">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
-            {% if request.user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link" href="#">{% translate "My Profile" %}</a>
-            </li>
-            <li class="nav-item">
-              {# URL provided by django-allauth/_auth/urls.py #}
-              <a class="nav-link" href="#">{% translate "Sign Out" %}</a>
-            </li>
-            {% else %}
-            {% if ACCOUNT_ALLOW_REGISTRATION %}
-            <li class="nav-item">
-              {# URL provided by django-allauth/_auth/urls.py #}
-              <a id="sign-up-link" class="nav-link" href="#">{% translate "Sign Up" %}</a>
-            </li>
-            {% endif %}
-            <li class="nav-item">
-              {# URL provided by django-allauth/_auth/urls.py #}
-              <a id="log-in-link" class="nav-link" href="#">{% translate "Sign In" %}</a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </div>
-  <div class="container">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <main class="page">
+    <div class="card">
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% block content %}{% endblock content %}
     </div>
-    {% endfor %}
-    {% endif %}
-    {% block content %}
-    <p>Use this document as a way to quick start any new project.</p>
-    {% endblock content %}
-  </div>
-  <!-- /container -->
-  {% block modal %}
-  {% endblock modal %}
-  {% block inline_javascript %}
-  {% comment %}
-  Script tags with only code, no src (defer by default). To run
-  with a "defer" so that you run inline code:
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      /* Run whatever you want */
-    });
-  </script>
-  {% endcomment %}
-  {% endblock inline_javascript %}
+  </main>
+  <footer>Powered by <strong>Django</strong></footer>
+  {% block modal %}{% endblock modal %}
+  {% block inline_javascript %}{% endblock inline_javascript %}
 </body>
 
 </html>

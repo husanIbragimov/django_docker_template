@@ -2,7 +2,8 @@
 
 {% block title %}Forbidden (403){% endblock title %}
 {% block content %}
-  <h1>Forbidden (403)</h1>
+  <p class="status-code">403</p>
+  <h1>Forbidden</h1>
   <p>
     {% if exception %}
       {{ exception }}
@@ -10,4 +11,5 @@
       You're not allowed to access this page.
     {% endif %}
   </p>
+  <a class="btn" href="/">Go to homepage</a>
 {% endblock content %}
