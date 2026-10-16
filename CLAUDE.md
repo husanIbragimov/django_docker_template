@@ -75,7 +75,7 @@ Enforced via `.pre-commit-config.yaml` (black, flake8, isort, mypy, plus a migra
 │   ├── Dockerfile               # web/celery image
 │   ├── DockerfileCron           # cron-worker image
 │   ├── docker-compose.prod.yml  # web, postgres, redis, celery (base for the other two)
-│   ├── docker-compose.dev.yml   # `include`s prod + adds nginx (docker/.conf/docker-nginx.conf)
+│   ├── docker-compose.dev.yml   # `include`s prod + adds nginx (docker/.conf/nginx/nginx.conf)
 │   └── docker-compose.local.yml # postgres + redis only (`extends` prod), for host-run Django/Celery
 ├── requirements/
 │   ├── base.txt                 # shared deps (Django, DRF, Celery, Kafka, Sentry, ...)
