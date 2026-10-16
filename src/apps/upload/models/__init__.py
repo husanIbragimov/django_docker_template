@@ -1,1 +1,1 @@
-from .upload_file_model import *
+from .file_model import *

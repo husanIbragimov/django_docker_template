@@ -30,6 +30,9 @@ makemigrations:
 migrate:
 	$(COMPOSE) run --rm web python manage.py migrate --no-input
 
+rbac-seed:
+	$(COMPOSE) run --rm web python manage.py rbac_seed
+
 superuser:
 	$(COMPOSE) run --rm web python manage.py createsuperuser
 

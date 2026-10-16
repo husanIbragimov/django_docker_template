@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from apps.upload.models import UploadFile
+from apps.upload.models import FilePath
 
 
 class UploadFileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UploadFile
+        model = FilePath
         fields = ("id", "file")
         read_only_fields = ("id",)

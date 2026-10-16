@@ -286,3 +286,19 @@ class ModulesCommandTests(Base):
         root = Module.objects.get(code="dashboard")
         self.assertEqual(root.children.get().code, "main")
         self.assertEqual(list(root.endpoints.values_list("key", flat=True)), ["finance:statistics"])
+
+
+class SeedCommandTests(Base):
+    @override_settings(ROOT_URLCONF="config.urls")
+    def test_seed_loads_ui_template(self):
+        stderr = StringIO()
+        call_command("rbac_seed", stdout=StringIO(), stderr=stderr)
+        self.assertEqual(stderr.getvalue(), "")  # template'dagi barcha API kalitlari mavjud
+        roles = Module.objects.get(code="rbac-roles")
+        self.assertEqual(roles.parent.code, "rbac")
+        self.assertEqual(set(roles.endpoints.values_list("key", flat=True)), {"rbac:role.list", "rbac:role.retrieve"})
+        self.assertTrue(Module.objects.filter(code="rbac-roles-access", parent=roles).exists())
+
+        count = Module.objects.count()
+        call_command("rbac_seed", "--skip-sync", stdout=StringIO(), stderr=StringIO())
+        self.assertEqual(Module.objects.count(), count)

@@ -1,0 +1,115 @@
+[
+  {
+    "code": "profile",
+    "name": "Profil",
+    "description": "Joriy foydalanuvchi profili",
+    "endpoints": ["user:user_me_view"],
+    "children": [
+      {
+        "code": "profile-logout",
+        "name": "Chiqish",
+        "description": "Tizimdan chiqish (refresh tokenni bekor qilish)",
+        "endpoints": ["auth:user_logout"]
+      }
+    ]
+  },
+  {
+    "code": "upload",
+    "name": "Fayl yuklash",
+    "description": "Formalardagi fayl yuklash maydoni",
+    "endpoints": ["upload:upload-file"]
+  },
+  {
+    "code": "rbac",
+    "name": "Ruxsatlar boshqaruvi",
+    "description": "Rollar, UI modullar va API endpointlar",
+    "children": [
+      {
+        "code": "rbac-roles",
+        "name": "Rollar",
+        "description": "Rollar ro'yxati va ko'rish",
+        "endpoints": ["rbac:role.list", "rbac:role.retrieve"],
+        "children": [
+          {
+            "code": "rbac-roles-create",
+            "name": "Rol qo'shish",
+            "endpoints": ["rbac:role.create"]
+          },
+          {
+            "code": "rbac-roles-update",
+            "name": "Rolni tahrirlash",
+            "endpoints": ["rbac:role.update", "rbac:role.partial_update"]
+          },
+          {
+            "code": "rbac-roles-delete",
+            "name": "Rolni o'chirish",
+            "endpoints": ["rbac:role.destroy"]
+          },
+          {
+            "code": "rbac-roles-access",
+            "name": "Rol ruxsatlari",
+            "description": "Modullar daraxti va API'lar checkbox ekrani",
+            "endpoints": ["rbac:role.access", "rbac:role.set_access"]
+          },
+          {
+            "code": "rbac-roles-users",
+            "name": "Rol foydalanuvchilari",
+            "endpoints": ["rbac:role.users"]
+          }
+        ]
+      },
+      {
+        "code": "rbac-user-roles",
+        "name": "Foydalanuvchi rollari",
+        "description": "Foydalanuvchiga rol biriktirish",
+        "endpoints": ["rbac:user-roles.retrieve", "rbac:user-roles.update", "rbac:role.list"]
+      },
+      {
+        "code": "rbac-modules",
+        "name": "UI modullar",
+        "description": "UI modullar daraxti",
+        "endpoints": ["rbac:module.list", "rbac:module.retrieve", "rbac:module.tree"],
+        "children": [
+          {
+            "code": "rbac-modules-create",
+            "name": "Modul qo'shish",
+            "endpoints": ["rbac:module.create", "rbac:endpoint.groups"]
+          },
+          {
+            "code": "rbac-modules-update",
+            "name": "Modulni tahrirlash",
+            "endpoints": ["rbac:module.update", "rbac:module.partial_update", "rbac:endpoint.groups"]
+          },
+          {
+            "code": "rbac-modules-delete",
+            "name": "Modulni o'chirish",
+            "endpoints": ["rbac:module.destroy"]
+          }
+        ]
+      },
+      {
+        "code": "rbac-endpoints",
+        "name": "API endpointlar",
+        "description": "API katalogi (ichki va gateway)",
+        "endpoints": ["rbac:endpoint.list", "rbac:endpoint.retrieve", "rbac:endpoint.groups"],
+        "children": [
+          {
+            "code": "rbac-endpoints-create",
+            "name": "Gateway API qo'shish",
+            "endpoints": ["rbac:endpoint.create"]
+          },
+          {
+            "code": "rbac-endpoints-update",
+            "name": "API'ni tahrirlash",
+            "endpoints": ["rbac:endpoint.update", "rbac:endpoint.partial_update"]
+          },
+          {
+            "code": "rbac-endpoints-delete",
+            "name": "API'ni o'chirish",
+            "endpoints": ["rbac:endpoint.destroy"]
+          }
+        ]
+      }
+    ]
+  }
+]

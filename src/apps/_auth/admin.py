@@ -11,11 +11,11 @@ class UserAdmin(BaseUserAdmin):
         "username",
         "first_name",
         "last_name",
-        "role",
+        # "role",
     )
     list_filter = (
         "is_active",
-        "role",
+        # "role",
     )
     fieldsets = (
         (None, {"fields": ("username", "password")}),
@@ -25,7 +25,7 @@ class UserAdmin(BaseUserAdmin):
                 "fields": (
                     "first_name",
                     "last_name",
-                    "role",
+                    # "role",
                 )
             },
         ),
@@ -62,7 +62,7 @@ class UserAdmin(BaseUserAdmin):
         "groups",
         "user_permissions",
     )
-    list_editable = ("role",)
+    # list_editable = ("role",)
 
 
 admin.site.register(User, UserAdmin)

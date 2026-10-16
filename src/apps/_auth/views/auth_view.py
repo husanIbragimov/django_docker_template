@@ -9,11 +9,13 @@ from apps._auth.serializers.auth_serializer import (
     LogoutSerializer,
 )
 from apps._auth.services.auth_service import AuthService
+from apps.rbac.permissions import HasApiAccess
 
 
 class AuthAPIView(GenericAPIView):
     serializer_class = AuthResponseSerializer
     permission_classes = (permissions.AllowAny,)
+    rbac_public = True
 
     @extend_schema(tags=["Auth"], responses=AuthResponseSerializer)
     def post(self, request, *args, **kwargs):
@@ -30,7 +32,7 @@ class AuthAPIView(GenericAPIView):
 @extend_schema(tags=["Auth"])
 class LogoutAPIView(APIView):
     serializer_class = LogoutSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (HasApiAccess,)
     service_class = AuthService()
 
     def post(self, request) -> Response:

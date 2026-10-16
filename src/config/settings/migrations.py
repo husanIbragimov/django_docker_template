@@ -22,6 +22,6 @@ def create_migration_dirs(app):
 _MIGRATION_APPS: list = list(filter(None, (create_migration_dirs(app) for app in LOCAL_APPS)))
 
 MIGRATION_MODULES = {
-    app: f"{app}.migrations.prod" if PRODUCTION else f"{app}.migrations.dev"
+    app.rsplit(".", 1)[-1]: f"{app}.migrations.prod" if PRODUCTION else f"{app}.migrations.dev"
     for app in _MIGRATION_APPS
 }

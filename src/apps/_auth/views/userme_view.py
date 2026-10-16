@@ -1,10 +1,10 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps._auth.models import User
 from apps._auth.serializers.userme_serializer import UserMeSerializer
+from apps.rbac.permissions import HasApiAccess
 
 
 @extend_schema(tags=["User"])
@@ -14,7 +14,7 @@ class UserMeView(RetrieveUpdateAPIView):
     """
 
     serializer_class = UserMeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [HasApiAccess]
     queryset = User.objects.all()
 
     def get_object(self):
